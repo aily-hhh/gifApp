@@ -8,9 +8,10 @@ import retrofit2.http.Query
 
 interface GifServise {
 
-    @GET("/v1/gifs/search")
+    @GET("v1/gifs/search")
     suspend fun getGifs(
         @Query("q") query: String,
-        @Query("api_key") apiKey: String = API_KEY
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("limit") limit: Int = 25
     ): Response<GifResponse>
 }

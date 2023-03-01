@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/detailFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.hhh.gifapp.ui.delailFragment.DetailFragment"
+        android:name="com.hhh.gifapp.ui.detailFragment.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="urlGif"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.hhh.gifapp.ui.mainFragment.MainFragment"
