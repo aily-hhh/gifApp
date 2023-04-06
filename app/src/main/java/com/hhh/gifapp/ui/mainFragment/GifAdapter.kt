@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,13 +16,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class GifAdapter: RecyclerView.Adapter<GifAdapter.GifViewHolder>() {
+class GifAdapter: PagingDataAdapter<GifData, GifAdapter.GifViewHolder>(Callback()) {
 
     inner class GifViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val gifItem: ImageView = itemView.findViewById(R.id.gifItem)
     }
 
-    private val callback = object: DiffUtil.ItemCallback<GifData>() {
+    class Callback: DiffUtil.ItemCallback<GifData>() {
         override fun areItemsTheSame(oldItem: GifData, newItem: GifData): Boolean {
             return oldItem == newItem
         }
@@ -36,11 +37,11 @@ class GifAdapter: RecyclerView.Adapter<GifAdapter.GifViewHolder>() {
 
     }
 
-    private val differ = AsyncListDiffer(this, callback)
+    private val differ = AsyncListDiffer(this, Callback())
 
-    fun setDiffer(list: List<GifData>) {
-        this.differ.submitList(list)
-    }
+//    fun setDiffer(list: List<GifData>) {
+//        this.differ.submitList(list)
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
         return GifViewHolder(

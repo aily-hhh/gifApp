@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +21,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.textfield.TextInputEditText
 import com.hhh.gifapp.R
 import com.hhh.gifapp.databinding.FragmentMainBinding
+import com.hhh.gifapp.model.GifData
 import com.hhh.gifapp.util.State
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
@@ -66,27 +69,29 @@ class MainFragment : Fragment() {
             }
         })
 
-        viewModelMain.gifLiveData.observe(viewLifecycleOwner) {
-            when (it) {
-                is State.Loading -> {
-                    progressBar?.visibility = View.VISIBLE
-                }
-                is State.Success -> {
-                    progressBar?.visibility = View.INVISIBLE
-                    adapterGif?.setDiffer(it.data!!.data)
-                    Log.d("checkData", "Main Fragment, success: ${it.data!!.data}")
-                    Log.d("checkData", "Main Fragment, success: ${adapterGif?.itemCount}")
-                }
-                is State.Error -> {
-                    progressBar?.visibility = View.INVISIBLE
-                    Log.e("checkData", "Main Fragment, error: ${it}")
-                }
-                else -> {
-                    progressBar?.visibility = View.INVISIBLE
-                    Log.e("checkData", "Main Fragment, else")
-                }
-            }
-        }
+//        viewModelMain.gifLiveData.observe(viewLifecycleOwner) {
+//            when (it) {
+//                is State.Loading -> {
+//                    progressBar?.visibility = View.VISIBLE
+//                }
+//                is State.Success -> {
+//                    progressBar?.visibility = View.INVISIBLE
+//                    adapterGif?.setDiffer(it.data!!.data)
+//                    Log.d("checkData", "Main Fragment, success: ${it.data!!.data}")
+//                    Log.d("checkData", "Main Fragment, success: ${adapterGif?.itemCount}")
+//                }
+//                is State.Error -> {
+//                    progressBar?.visibility = View.INVISIBLE
+//                    Log.e("checkData", "Main Fragment, error: ${it}")
+//                }
+//                else -> {
+//                    progressBar?.visibility = View.INVISIBLE
+//                    Log.e("checkData", "Main Fragment, else")
+//                }
+//            }
+//        }
+
+
 
         searchGifs?.addTextChangedListener { text: Editable? ->
             job?.cancel()
@@ -94,7 +99,9 @@ class MainFragment : Fragment() {
                 delay(450)
                 text.let {
                     if (it.toString().isNotEmpty()) {
-                        viewModelMain.getGifs(query = it.toString())
+                        viewModelMain.getPagingGifs(query = it.toString()).collect{ data ->
+                            adapterGif?.submitData(data)
+                        }
                     }
                 }
             }

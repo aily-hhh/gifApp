@@ -11,6 +11,7 @@ interface GifServise {
     @GET("v1/gifs/search")
     suspend fun getGifs(
         @Query("q") query: String,
+        @Query("offset") offset: Int,
         @Query("api_key") apiKey: String = API_KEY,
         @Query("limit") limit: Int = 25
     ): Response<GifResponse>

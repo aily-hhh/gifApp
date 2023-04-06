@@ -86,6 +86,12 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
-    //Giphy
+    // Giphy
     implementation 'com.giphy.sdk:ui:2.3.1'
+
+    // Paging 3
+    def paging_version = "3.1.1"
+    implementation("androidx.paging:paging-runtime:$paging_version")
+    testImplementation("androidx.paging:paging-common:$paging_version")
+    implementation("androidx.paging:paging-guava:$paging_version")
 }
